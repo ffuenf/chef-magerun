@@ -23,6 +23,34 @@ def whyrun_supported?
 end
 
 action :install do
+	description = "install n98-magerun.phar in #{node['n98-magerun']['install_dir']}"
+	converge_by(description) do
+		directory node['n98-magerun']['dir']
+		git node['n98-magerun']['dir'] do
+			repository node['n98-magerun']['git-url']
+			reference node['n98-magerun']['git-reference']
+			action :sync
+			not_if do
+				::File.exists?("#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']}")
+			end
+		end
+		chef_php_extra_composer node['n98-magerun']['dir'] do
+			action [:install_composer, :install_packages]
+		end
+		bash 'install_n98-magerun' do
+			cwd node['n98-magerun']['dir']
+			code <<-EOF
+				cp #{node['n98-magerun']['install_file']} #{node['n98-magerun']['install_dir']}
+			EOF
+			not_if do
+				::File.exists?("#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']}")
+			end
+			creates "#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']}"
+		end
+	end
+end
+
+action :install_magento do
 	description = "Install magento in #{@new_resource.path}"
 	converge_by(description) do
 		command = "install"
@@ -487,18 +515,6 @@ action :dev_setup_script_attribute do
 	end
 end
 
-action :dev_symlinks do
-	description = "Toggle allow symlinks setting in #{@new_resource.path}"
-	converge_by(description) do
-		command = "dev:symlinks"
-		command << " --#{@new_resource.status}" if !@new_resource.status.empty?
-		command << " --global" if @new_resource.global
-		command << " #{@new_resource.store}"
-		
-		magerun(command, description)
-	end
-end
-
 action :dev_templatehints do
 	description = "Toggle template hints in #{@new_resource.path}"
 	converge_by(description) do
@@ -773,4 +789,18 @@ end
 
 def load_current_resource
 	@current_resource = Chef::Resource::Magerun.new(@new_resource.name)
+	
+	if exists?()
+		@current_resource.exists = true
+	end
+end
+
+private
+def exists?()
+	begin
+		::File.exists?("#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']}")
+	rescue Chef::Exceptions::ShellCommandFailed
+	rescue Mixlib::ShellOut::ShellCommandFailed
+		false
+	end
 end

@@ -1,7 +1,7 @@
 Description
 ===========
 
-Installs [modman](https://github.com/colinmollenhour/modman) and provides access to a corresponding LWRP.
+Installs [n98-magerun](https://github.com/netz98/n98-magerun) and provides access to a corresponding LWRP.
 
 Requirements
 ============
@@ -63,6 +63,7 @@ License and Author
 ==================
 parts of this cookbook has been copied from [rjocoleman](https://github.com/rjocoleman/magerun-chef)
 
+Author of n98-magerun:: [netz98 new media GmbH](http://www.netz98.de)
 Author:: Achim Rosenhagen (<a.rosenhagen@ffuenf.de>)
 
 Copyright:: 2013, Achim Rosenhagen
