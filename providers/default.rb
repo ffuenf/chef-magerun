@@ -206,7 +206,7 @@ action :config_get do
 	converge_by(description) do
 		command = 'n98-magerun.phar'
 		command << ' config:get'
-		command << ' --scope-id=#{@new_resource.scope-id}' if !@new_resource.scopeid.empty?
+		command << ' --scope-id=#{@new_resource.scopeid}' if !@new_resource.scopeid.empty?
 		command << ' --decrypt' if @new_resource.decrypt
 		command << ' #{@new_resource.config_path}'
 		
@@ -230,18 +230,12 @@ action :config_set do
 		command = 'n98-magerun.phar'
 		command << ' config:set'
 		command << ' --scope=#{@new_resource.scope}' if !@new_resource.scope.empty?
-		command << ' --scope-id=#{@new_resource.scope-id}' if !@new_resource.scopeid.empty?
+		command << ' --scope-id=#{@new_resource.scopeid}' if !@new_resource.scopeid.empty?
 		command << ' --encrypt' if @new_resource.encrypt
 		command << ' #{@new_resource.config_path}'
 		command << ' #{@new_resource.config_value}'
 		
-		script "set_a_core_config_item" do
-			interpreter 'bash'
-			cwd new_resource.path
-			code <<-EOF
-				#{command}
-			EOF
-		end
+		magerun(command, description)
 	end
 end
 
@@ -319,11 +313,11 @@ action :db_dump do
 	description = "Dump database with mysqldump cli client according to informations from local.xml in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << " --add-time" if @new_resource.add-time and @new_resource.filename.empty?
+		command << " --add-time" if @new_resource.addtime and @new_resource.filename.empty?
 		command << " --compression=#{@new_resource.compression}" if @new_resource.compression and !@new_resource.compression.empty?
-		command << " --only-command" if @new_resource.only-command and !@new_resource.filename.empty?
-		command << " --no-single-transaction" if @new_resource.no-single-transaction
-		command << " --human-readable" if @new_resource.human-readable
+		command << " --only-command" if @new_resource.onlycommand and !@new_resource.filename.empty?
+		command << " --no-single-transaction" if @new_resource.nosingletransaction
+		command << " --human-readable" if @new_resource.humanreadable
 		command << " --stdout" if @new_resource.stdout
 		command << " --strip=#{@new_resource.strip}" if @new_resource.strip and !@new_resource.strip.empty?
 		command << " --force" if @new_resource.force
@@ -336,7 +330,8 @@ action :db_import do
 	description = "Import database with mysql cli client according to database defined in local.xml in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " --compression=#{@new_resource.compression}" if @new_resource.compression and !@new_resource.compression.empty?
+		command << " --only-command" if @new_resource.onlycommand and !@new_resource.filename.empty?
 		
 		magerun(command, description)
 	end
@@ -346,15 +341,9 @@ action :db_info do
 	description = "Dump database informations in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " db:info"
 		
-		scriptdescription do
-			interpreter 'bash'
-			cwd new_resource.path
-			code <<-EOF
-				#{command}
-			EOF
-		end
+		magerun(command, description)
 	end
 end
 
@@ -362,7 +351,9 @@ action :db_query do
 	description = "Execute an SQL query on the database defined in local.xml in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " db:query"
+		command << " --only-command" if @new_resource.onlycommand and !@new_resource.filename.empty?
+		command << " #{@new_resource.query}"
 		
 		magerun(command, description)
 	end
@@ -372,7 +363,7 @@ action :design_demonotice do
 	description = "Toggle demo store notice for a store view in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " design:demonotice #{@new_resource.store}"
 		
 		magerun(command, description)
 	end
@@ -382,7 +373,7 @@ action :dev_class_lookup do
 	description = "Resolve a grouped class name in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:class:lookup #{@new_resource.class_type} #{@new_resource.class_name}"
 		
 		magerun(command, description)
 	end
@@ -392,7 +383,7 @@ action :dev_console do
 	description = "Open PHP interactive shell with initialized Mage::app() (Experimental) in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:console"
 		
 		magerun(command, description)
 	end
@@ -402,7 +393,8 @@ action :dev_ide_phpstorm_meta do
 	description = "Generate meta data file for PhpStorm auto completion in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:ide:phpstorm:meta"
+		command << " --stdout" if @new_resource.stdout
 		
 		magerun(command, description)
 	end
@@ -412,7 +404,10 @@ action :dev_log do
 	description = "Toggle development log (system.log, exception.log) in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:log"
+		command << " --#{@new_resource.status}" if !@new_resource.status.empty?
+		command << " --global" if @new_resource.global
+		command << " #{@new_resource.store}"
 		
 		magerun(command, description)
 	end
@@ -422,7 +417,8 @@ action :dev_log_db do
 	description = "Turn on/off database query logging in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:log:db"
+		command << " --#{@new_resource.status}" if !@new_resource.status.empty?
 		
 		magerun(command, description)
 	end
@@ -432,7 +428,7 @@ action :dev_log_size do
 	description = "Get size of log file in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:log:size #{@new_resource.log_filename}"
 		
 		magerun(command, description)
 	end
@@ -442,7 +438,21 @@ action :dev_module_create do
 	description = "Create and register a new magento module in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:module:create"
+		command << " --add-blocks" if @new_resource.addblocks
+		command << " --add-helpers" if @new_resource.addhelpers
+		command << " --add-models" if @new_resource.addmodels
+		command << " --add-setup" if @new_resource.addsetup
+		command << " --add-all" if @new_resource.addall
+		command << " --modman" if @new_resource.modman
+		command << " --add-readme" if @new_resource.addreadme
+		command << " --add-composer" if @new_resource.addcomposer
+		command << " --author-name='#{@new_resource.authorname}'" if !@new_resource.authorname.empty?
+		command << " --author-email='#{@new_resource.authoremail}'" if !@new_resource.authoremail.empty?
+		command << " --description='#{@new_resource.description}'" if !@new_resource.description.empty?
+		command << " #{@new_resource.vendorNamespace}"
+		command << " #{@new_resource.moduleName}"
+		command << " #{@new_resource.codePool}"
 		
 		magerun(command, description)
 	end
@@ -452,7 +462,7 @@ action :dev_module_list do
 	description = "List all installed modules in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:module:list"
 		
 		magerun(command, description)
 	end
@@ -462,7 +472,8 @@ action :dev_module_observer_list do
 	description = "List all registered observers in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:module:observer:list"
+		command << " #{@new_resource.observertype}"
 		
 		magerun(command, description)
 	end
@@ -472,7 +483,8 @@ action :dev_module_rewrite_conflicts do
 	description = "List all magento rewrite conflicts in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:module:rewrite:conflicts"
+		command << " --log-junit='#{@new_resource.logjunit}'" if !@new_resource.logjunit.empty?
 		
 		magerun(command, description)
 	end
@@ -482,7 +494,7 @@ action :dev_module_rewrite_list do
 	description = "List all magento rewrites in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:module:rewrite:list"
 		
 		magerun(command, description)
 	end
@@ -492,7 +504,10 @@ action :dev_profiler do
 	description = "Toggle profiler for debugging in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:profiler"
+		command << " --#{@new_resource.status}" if !@new_resource.status.empty?
+		command << " --global" if @new_resource.global
+		command << " #{@new_resource.store}"
 		
 		magerun(command, description)
 	end
@@ -502,7 +517,7 @@ action :dev_report_count do
 	description = "Get count of report files in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:report:count"
 		
 		magerun(command, description)
 	end
@@ -512,7 +527,7 @@ action :dev_setup_script_attribute do
 	description = "Create attribute script for a given attribute code in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:setup:script:attribute #{@new_resource.entityType} #{@new_resource.attributeCode}"
 		
 		magerun(command, description)
 	end
@@ -522,7 +537,10 @@ action :dev_symlinks do
 	description = "Toggle allow symlinks setting in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:symlinks"
+		command << " --#{@new_resource.status}" if !@new_resource.status.empty?
+		command << " --global" if @new_resource.global
+		command << " #{@new_resource.store}"
 		
 		magerun(command, description)
 	end
@@ -532,7 +550,7 @@ action :dev_templatehints do
 	description = "Toggle template hints in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:template-hints #{@new_resource.store}"
 		
 		magerun(command, description)
 	end
@@ -542,7 +560,7 @@ action :dev_templatehintsblocks do
 	description = "Toggle template hints block names in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:template-hints-blocks #{@new_resource.store}"
 		
 		magerun(command, description)
 	end
@@ -552,7 +570,9 @@ action :dev_theme_duplicates do
 	description = "Find duplicate files in your theme in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:theme:duplicates"
+		command << " --log-junit=#{@new_resource.logjunit}" if !@new_resource.logjunit.empty?
+		command << " #{@new_resource.theme} #{@new_resource.originalTheme}"
 		
 		magerun(command, description)
 	end
@@ -562,7 +582,7 @@ action :dev_theme_list do
 	description = "List all available themes in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:theme:list"
 		
 		magerun(command, description)
 	end
@@ -572,7 +592,7 @@ action :dev_translate_admin do
 	description = "Toggle inline translation tool for admin in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:translate:admin"
 		
 		magerun(command, description)
 	end
@@ -582,7 +602,7 @@ action :dev_translate_shop do
 	description = "Toggle inline translation tool for shop in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " dev:translate:shop #{@new_resource.store}"
 		
 		magerun(command, description)
 	end
@@ -592,7 +612,7 @@ action :extension_download do
 	description = "Download magento-connect package in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " extension:download #{@new_resource.package_key}"
 		
 		magerun(command, description)
 	end
@@ -602,7 +622,7 @@ action :extension_install do
 	description = "Install magento-connect package in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " extension:install #{@new_resource.package_key}"
 		
 		magerun(command, description)
 	end
@@ -612,7 +632,7 @@ action :extension_list do
 	description = "List magento connection extensions in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " extension:list #{@new_resource.query}"
 		
 		magerun(command, description)
 	end
@@ -622,7 +642,7 @@ action :extension_search do
 	description = "List magento connection extensions in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " extension:search #{@new_resource.query}"
 		
 		magerun(command, description)
 	end
@@ -632,7 +652,7 @@ action :extension_upgrade do
 	description = "Upgrade magento-connect package in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " extension:upgrade #{@new_resource.package_key}"
 		
 		magerun(command, description)
 	end
@@ -642,7 +662,7 @@ action :index_list do
 	description = "List all magento indexes in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " index:list"
 		
 		magerun(command, description)
 	end
@@ -652,7 +672,7 @@ action :index_reindex do
 	description = "Reindex a magento index by code in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " index:reindex #{@new_resource.code}"
 		
 		magerun(command, description)
 	end
@@ -662,7 +682,7 @@ action :index_reindex_all do
 	description = "Reindex all magento indexes in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " index:reindex:all"
 		
 		magerun(command, description)
 	end
@@ -672,7 +692,7 @@ action :localconfig_generate do
 	description = "Generate local.xml config in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " local-config:generate"
 		
 		magerun(command, description)
 	end
@@ -682,7 +702,7 @@ action :sys_check do
 	description = "Check Magento System in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " sys:check"
 		
 		magerun(command, description)
 	end
@@ -692,7 +712,7 @@ action :sys_cron_history do
 	description = "List last executed jobs in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " sys:cron:history"
 		
 		magerun(command, description)
 	end
@@ -702,7 +722,7 @@ action :sys_cron_list do
 	description = "List all cronjobs in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " sys:cron:list"
 		
 		magerun(command, description)
 	end
@@ -712,7 +732,7 @@ action :sys_cron_run do
 	description = "Run a cronjob by job code in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " sys:cron:run #{@new_resource.job}"
 		
 		magerun(command, description)
 	end
@@ -722,7 +742,7 @@ action :sys_info do
 	description = "Print infos about the current magento system in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " sys:info"
 		
 		magerun(command, description)
 	end
@@ -732,7 +752,8 @@ action :sys_maintenance do
 	description = "Toggle maintenance mode in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " sys:maintenance"
+		command << " --#{@new_resource.status}" if !@new_resource.status.empty?
 		
 		magerun(command, description)
 	end
@@ -742,7 +763,7 @@ action :sys_modules_list do
 	description = "List all installed modules in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " sys:modules:list"
 		
 		magerun(command, description)
 	end
@@ -752,7 +773,8 @@ action :sys_setup_compareversions do
 	description = "Compare module version with core_resource table in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " sys:setup:compare-versions"
+		command << " --ignore-data" if @new_resource.ignoredata
 		
 		magerun(command, description)
 	end
@@ -762,7 +784,7 @@ action :sys_setup_run do
 	description = "Run all new setup scripts in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " sys:setup:run"
 		
 		magerun(command, description)
 	end
@@ -772,7 +794,7 @@ action :sys_store_config_baseurl_list do
 	description = "List all base urls in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " sys:store:config:base-url:list"
 		
 		magerun(command, description)
 	end
@@ -782,7 +804,7 @@ action :sys_store_list do
 	description = "List all installed store-views in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " sys:store:list"
 		
 		magerun(command, description)
 	end
@@ -792,7 +814,12 @@ action :sys_url_list do
 	description = "Get all urls in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " sys:url:list"
+		command << " --add-categories" if @new_resource.addcategories
+		command << " --add-products" if @new_resource.addproducts
+		command << " --add-cmspages" if @new_resource.addcmspages
+		command << " --add-all" if @new_resource.addall
+		command << " #{@new_resource.stores} #{@new_resource.linetemplate}"
 		
 		magerun(command, description)
 	end
@@ -802,7 +829,7 @@ action :sys_website_list do
 	description = "List all websites in #{@new_resource.path}"
 	converge_by(description) do
 		command = "n98-magerun.phar"
-		command << ""
+		command << " sys:website:list"
 		
 		magerun(command, description)
 	end

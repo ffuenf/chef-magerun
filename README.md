@@ -27,8 +27,21 @@ Usage
 =====
 
 Simply include the recipe in your application recipe, where you setup/deploy magento.
+```ruby
+include_recipe "magerun"
+```
 
-As a sidenote for vagrant users: - You may set up a bash function to use a pseudo-tty with magerun in the vagrant box.
+ATTENTION: name this cookbook "magerun" if you want to use the LWRP like this:
+```ruby
+magerun "PATH TO YOUR MAGENTO ROOT" do
+	action :cache_flush
+end
+```
+
+See [Command-Reference](https://github.com/netz98/n98-magerun/wiki/Command-Reference) for available commands.
+Keep an eye on the associated actions in the LWRP (providers/default.rb) since some commands had to be rewritten using no "-".
+
+As a sidenote for [vagrant](http://www.vagrantup.com) users: - You may set up a bash function to use a pseudo-tty with magerun in the vagrant box.
 
 e.g. in your local `~/.bash_profile` place:
 ```bash

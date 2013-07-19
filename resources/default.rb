@@ -29,5 +29,48 @@ attribute :encrypt, :kind_of => [ TrueClass, FalseClass ], :default => false
 attribute :decrypt, :kind_of => [ TrueClass, FalseClass ], :default => false
 attribute :query, :kind_of => String
 attribute :website, :kind_of => String
+attribute :store, :kind_of => String
 attribute :count, :kind_of => Fixnum
 attribute :locale, :kind_of => String, :equal_to => ["cs_CZ", "ru_RU", "bg_BG", "en_US", "it_IT", "sr_RS", "sr_Cyrl_RS", "sr_Latn_RS", "pl_PL", "en_GB", "de_DE", "sk_SK", "fr_FR", "es_AR", "de_AT"]
+attribute :config_path, :kind_of => String
+attribute :config_value, :kind_of => String
+attribute :addtime, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :compression, :kind_of => String
+attribute :onlycommand, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :nosingletransaction, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :humanreadable, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :stdout, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :strip, :kind_of => String
+attribute :force, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :class_type, :kind_of => String, :equal_to => ["block", "model", "helper"]
+attribute :class_name, :kind_of => String
+attribute :status, :kind_of => String, :equal_to => ["on", "off"]
+attribute :global, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :log_filename, :kind_of => String
+attribute :addcategories, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :addproducts, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :addcmspages, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :addblocks, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :addhelpers, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :addmodels, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :addsetup, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :addall, :kind_of => [ TrueClass, FalseClass ], :default => true
+attribute :modman, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :addreadme, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :addcomposer, :kind_of => [ TrueClass, FalseClass ], :default => false
+attribute :authorname, :kind_of => String
+attribute :authoremail, :kind_of => String
+attribute :description, :kind_of => String
+attribute :vendorNamespace, :kind_of => String
+attribute :moduleName, :kind_of => String
+attribute :codePool, :kind_of => String, :equal_to => ["local", "community"], :default => 'local'
+attribute :observertype, :kind_of => String, :equal_to => ["adminhtml", "global", "frontend"]
+attribute :logjunit, :kind_of => String
+attribute :entityType, :kind_of => String
+attribute :attributeCode, :kind_of => String
+attribute :theme, :kind_of => String
+attribute :originalTheme, :kind_of => String, :default => "base/default"
+attribute :package_key, :kind_of => String
+attribute :code, :kind_of => String
+attribute :job, :kind_of => String
+attribute :ignoredata, :kind_of => [ TrueClass, FalseClass ], :default => false
