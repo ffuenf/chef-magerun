@@ -24,7 +24,7 @@ attribute :page_id, :kind_of => String
 attribute :revision_id, :kind_of => String
 attribute :config_path, :kind_of => String
 attribute :scope, :kind_of => String, :default => "default"
-attribute :scopeid, :kind_of => String, :default => "0"
+attribute :scopeid, :kind_of => Fixnum, :default => 0
 attribute :encrypt, :kind_of => [ TrueClass, FalseClass ], :default => false
 attribute :decrypt, :kind_of => [ TrueClass, FalseClass ], :default => false
 attribute :query, :kind_of => String
