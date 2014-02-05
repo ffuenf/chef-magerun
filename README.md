@@ -11,8 +11,6 @@ This Cookbook is only useful when dealing with [magento](http://www.magentocomme
 Cookbooks
 ---------
 
-* chef-php-extra (leverages chef_php_extra_composer LWRP)
-
 Attributes
 ==========
 
@@ -66,7 +64,7 @@ parts of this cookbook has been copied from [rjocoleman](https://github.com/rjoc
 Author of n98-magerun:: [netz98 new media GmbH](http://www.netz98.de)
 Author:: Achim Rosenhagen (<a.rosenhagen@ffuenf.de>)
 
-Copyright:: 2013, Achim Rosenhagen
+Copyright:: 2014, Achim Rosenhagen
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -2,7 +2,7 @@
 # Cookbook Name:: magerun
 # Provider:: magerun
 #
-# Copyright 2013, Achim Rosenhagen
+# Copyright 2014, Achim Rosenhagen
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ action :install do
 				::File.exists?("#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']}")
 			end
 		end
-		chef_php_extra_composer node['n98-magerun']['dir'] do
+		magerun_composer node['n98-magerun']['dir'] do
 			action [:install_composer, :install_packages]
 		end
 		bash 'install_n98-magerun' do
@@ -63,15 +63,6 @@ action :install_magento do
 		command << " --magentoVersionByName='#{new_resource.magentoVersionByName}'"
 		command << " --installationFolder='#{new_resource.installationFolder}'" if !@new_resource.installationFolder.empty?
 		command << " --baseUrl='#{new_resource.baseUrl}'" if !@new_resource.baseUrl.empty?
-		
-		magerun(command, description)
-	end
-end
-
-action :script do
-	description = "Run multiple n98-magerun commands in #{@new_resource.path}"
-	converge_by(description) do
-		command = "script #{new_resource.filename}"
 		
 		magerun(command, description)
 	end
@@ -185,20 +176,86 @@ action :cache_list do
 	end
 end
 
-action :cms_banner_toggle do
-	description = "Toggle a banner (Enterprise only) in #{@new_resource.path}"
+action :cache_report do
+	description = "View inside the cache in #{@new_resource.path}"
 	converge_by(description) do
-		command = "cms:banner:toggle #{@new_resource.banner_id}"
-		
+		command = "cache:report"
+    
 		magerun(command, description)
 	end
 end
 
-action :cms_page_publish do
-	description = "Publish a CMS page revision (Enterprise only) in #{@new_resource.path}"
+action :cache_view do
+	description = "Prints a cache entry in #{@new_resource.path}"
 	converge_by(description) do
-		command = "cms:page:publish #{@new_resource.page_id} #{@new_resource.revision_id}"
-		
+		command = "cache:view #{@new_resource.id}"
+    command << " --unserialize" if @new_resource.unserialize
+    command << " --fpc" if @new_resource.fpc
+    command << " #{@new_resource.id}"
+    
+		magerun(command, description)
+	end
+end
+
+action :composer_diagnose do
+	description = "Diagnoses the system to identify common errors in #{@new_resource.path}"
+	converge_by(description) do
+		command = "composer:diagnose"
+    
+		magerun(command, description)
+	end
+end
+
+action :composer_init do
+	description = "Creates a basic composer.json file in current directory in #{@new_resource.path}"
+	converge_by(description) do
+		command = "composer:init"
+    
+		magerun(command, description)
+	end
+end
+
+action :composer_install do
+	description = "Installs the project dependencies from the composer.lock file if present, or falls back on the composer.json in #{@new_resource.path}"
+	converge_by(description) do
+		command = "composer:install"
+    
+		magerun(command, description)
+	end
+end
+
+action :composer_require do
+	description = "Adds required packages to your composer.json and installs them in #{@new_resource.path}"
+	converge_by(description) do
+		command = "composer:require"
+    
+		magerun(command, description)
+	end
+end
+
+action :composer_search do
+	description = "Search for packages in #{@new_resource.path}"
+	converge_by(description) do
+		command = "composer:search"
+    
+		magerun(command, description)
+	end
+end
+
+action :composer_update do
+	description = "Updates your dependencies to the latest version according to composer.json, and updates the composer.lock file in #{@new_resource.path}"
+	converge_by(description) do
+		command = "composer:update"
+    
+		magerun(command, description)
+	end
+end
+
+action :composer_validate do
+	description = "Validates a composer.json in #{@new_resource.path}"
+	converge_by(description) do
+		command = "composer:validate"
+    
 		magerun(command, description)
 	end
 end
@@ -206,7 +263,7 @@ end
 action :config_dump do
 	description = "Dump merged xml config in #{@new_resource.path}"
 	converge_by(description) do
-		command = "config:dump #{@new_resource.config_path}"
+		command = "config:dump"
 		
 		magerun(command, description)
 	end
@@ -296,6 +353,15 @@ action :db_console do
 	description = "Open mysql client by database config from local.xml in #{@new_resource.path}"
 	converge_by(description) do
 		command = "db:console"
+		
+		magerun(command, description)
+	end
+end
+
+action :db_create do
+	description = "Create currently configured database in #{@new_resource.path}"
+	converge_by(description) do
+		command = "db:create"
 		
 		magerun(command, description)
 	end
@@ -442,6 +508,30 @@ action :dev_module_create do
 		command << " #{@new_resource.vendorNamespace}"
 		command << " #{@new_resource.moduleName}"
 		command << " #{@new_resource.codePool}"
+		
+		magerun(command, description)
+	end
+end
+
+action :dev_module_dependencies_from do
+	description = "Show list of modules which depend on %s module in #{@new_resource.path}"
+	converge_by(description) do
+		command = "dev:module:dependencies:from"
+		command << " --all" if @new_resource.all
+		command << " --format='#{@new_resource.format}'" if !@new_resource.format.empty?
+		command << " #{@new_resource.moduleName}"
+		
+		magerun(command, description)
+	end
+end
+
+action :dev_module_dependencies_on do
+	description = "Show list of modules which given module depends on #{@new_resource.path}"
+	converge_by(description) do
+		command = "dev:module:dependencies:on"
+		command << " --all" if @new_resource.all
+		command << " --format='#{@new_resource.format}'" if !@new_resource.format.empty?
+		command << " #{@new_resource.moduleName}"
 		
 		magerun(command, description)
 	end
@@ -647,6 +737,36 @@ action :localconfig_generate do
 	description = "Generate local.xml config in #{@new_resource.path}"
 	converge_by(description) do
 		command = "local-config:generate"
+		
+		magerun(command, description)
+	end
+end
+
+action :script do
+	description = "Run multiple n98-magerun commands in #{@new_resource.path}"
+	converge_by(description) do
+		command = "script #{new_resource.filename}"
+		
+		magerun(command, description)
+	end
+end
+
+action :script_repo_list do
+	description = "Lists all scripts in repository in #{@new_resource.path}"
+	converge_by(description) do
+		command = "script:repo:list"
+		
+		magerun(command, description)
+	end
+end
+
+action :script_repo_run do
+	description = "Run script from repository in #{@new_resource.path}"
+	converge_by(description) do
+		command = "script:repo:run"
+		command << " --define='#{@new_resource.define}'" if !@new_resource.define.empty?
+		command << " --stop-on-error" if @new_resource.stop_on_error
+		command << " #{@new_resource.script}"
 		
 		magerun(command, description)
 	end
