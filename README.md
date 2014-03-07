@@ -16,10 +16,10 @@ Attributes
 
 * `node['n98-magerun']['url']` - default: 'https://raw.github.com/netz98/n98-magerun/master/n98-magerun.phar'
 * `node['n98-magerun']['install_dir']` - default: '/usr/local/bin'
-* `node['n98-magerun']['install_file']` - default: 'n98-magerun.phar'
+* `node['n98-magerun']['install_file']` - default: 'n98-magerun'
 * `node['n98-magerun']['dir']` - default: '/var/lib/n98-magerun'
 * `node['n98-magerun']['git-url']` - default: 'https://github.com/netz98/n98-magerun'
-* `node['n98-magerun']['git-reference']` - default: 'master'
+* `node['n98-magerun']['git-reference']` - default: 'HEAD'
 
 Usage
 =====

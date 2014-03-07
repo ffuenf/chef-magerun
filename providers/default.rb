@@ -22,34 +22,6 @@ def whyrun_supported?
 	true
 end
 
-action :install do
-	description = "install n98-magerun.phar in #{node['n98-magerun']['install_dir']}"
-	converge_by(description) do
-		directory node['n98-magerun']['dir']
-		git node['n98-magerun']['dir'] do
-			repository node['n98-magerun']['git-url']
-			reference node['n98-magerun']['git-reference']
-			action :sync
-			not_if do
-				::File.exists?("#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']}")
-			end
-		end
-		magerun_composer node['n98-magerun']['dir'] do
-			action [:install_composer, :install_packages]
-		end
-		bash 'install_n98-magerun' do
-			cwd node['n98-magerun']['dir']
-			code <<-EOF
-				cp #{node['n98-magerun']['install_file']} #{node['n98-magerun']['install_dir']}
-			EOF
-			not_if do
-				::File.exists?("#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']}")
-			end
-			creates "#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']}"
-		end
-	end
-end
-
 action :install_magento do
 	description = "Install magento in #{@new_resource.path}"
 	converge_by(description) do
@@ -377,9 +349,10 @@ action :db_drop do
 end
 
 action :db_dump do
-	description = "Dump database with mysqldump cli client according to informations from local.xml in #{@new_resource.path}"
+	description = "Dump database with mysqldump cli client according to informations from local.xml to #{@new_resource.path}"
 	converge_by(description) do
-		command = "--add-time" if @new_resource.addtime and @new_resource.filename.empty?
+    command = "db:dump"
+		command << "--add-time" if @new_resource.addtime and @new_resource.filename.empty?
 		command << " --compression='#{@new_resource.compression}'" if @new_resource.compression and !@new_resource.compression.empty?
 		command << " --only-command" if @new_resource.onlycommand and !@new_resource.filename.empty?
 		command << " --no-single-transaction" if @new_resource.nosingletransaction
@@ -387,16 +360,19 @@ action :db_dump do
 		command << " --stdout" if @new_resource.stdout
 		command << " --strip='#{@new_resource.strip}'" if @new_resource.strip and !@new_resource.strip.empty?
 		command << " --force" if @new_resource.force
+    command << " #{@new_resource.filename}"
 		
 		magerun(command, description)
 	end
 end
 
 action :db_import do
-	description = "Import database with mysql cli client according to database defined in local.xml in #{@new_resource.path}"
+	description = "Import database file #{@new_resource.path} with mysql cli client according to database defined in local.xml"
 	converge_by(description) do
-		command = "--compression='#{@new_resource.compression}'" if @new_resource.compression and !@new_resource.compression.empty?
-		command << " --only-command" if @new_resource.onlycommand and !@new_resource.filename.empty?
+    command = "db:import"
+		command << " --compression='#{@new_resource.compression}'" if @new_resource.compression and !@new_resource.compression.empty?
+		command << " --only-command" if @new_resource.onlycommand and @new_resource.filename.empty?
+    command << " #{@new_resource.filename}"
 		
 		magerun(command, description)
 	end
@@ -745,7 +721,7 @@ end
 action :script do
 	description = "Run multiple n98-magerun commands in #{@new_resource.path}"
 	converge_by(description) do
-		command = "script #{new_resource.filename}"
+		command = "script < #{new_resource.filename}"
 		
 		magerun(command, description)
 	end
@@ -902,7 +878,7 @@ def magerun(command, description)
 		user "root"
 		cwd new_resource.path
 		code <<-EOF
-			n98-magerun.phar -n -q --root-dir=#{new_resource.path} #{command}
+			#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']} -n -q --root-dir=#{new_resource.path} #{command}
 		EOF
 	end
 end

@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of magerun.
 
+## 2.0.0:
+
+* remove composer entirely as its not needed here
+* move installation of magerun from LWRP to default recipe
+* fix commands
+
 ## 1.1.0:
 
 * remove dependency to chef-php-extra by including own composer lwrp
