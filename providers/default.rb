@@ -831,6 +831,15 @@ action :sys_setup_run do
 	end
 end
 
+action :sys_setup_incremental do
+	description = "Run all new setup scripts incrementally in #{@new_resource.path}"
+	converge_by(description) do
+		command = "sys:setup:incremental"
+		
+		magerun(command, description)
+	end
+end
+
 action :sys_store_config_baseurl_list do
 	description = "List all base urls in #{@new_resource.path}"
 	converge_by(description) do

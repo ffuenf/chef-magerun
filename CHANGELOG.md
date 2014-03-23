@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of magerun.
 
+## 2.0.1:
+
+* add sys:setup:incremental command
+
 ## 2.0.0:
 
 * remove composer entirely as its not needed here
