@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of magerun.
 
+## 2.0.2:
+
+* add role attribute to admin:user:create
+
 ## 2.0.1:
 
 * add sys:setup:incremental command

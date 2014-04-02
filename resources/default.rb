@@ -18,6 +18,7 @@ attribute :password, :kind_of => String
 attribute :email, :kind_of => String
 attribute :firstname, :kind_of => String
 attribute :lastname, :kind_of => String
+attribute :role, :kind_of => String, :default => "Administrators"
 attribute :cachekey, :kind_of => String
 attribute :banner_id, :kind_of => String
 attribute :page_id, :kind_of => String

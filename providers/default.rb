@@ -88,7 +88,7 @@ end
 action :admin_user_create do
 	description = "Create admin user in #{@new_resource.path}"
 	converge_by(description) do
-		command = "admin:user:create #{@new_resource.username} #{@new_resource.email} #{@new_resource.password} #{@new_resource.firstname} #{@new_resource.lastname}"
+		command = "admin:user:create #{@new_resource.username} #{@new_resource.email} #{@new_resource.password} #{@new_resource.firstname} #{@new_resource.lastname} #{@new_resource.role}"
 		
 		magerun(command, description)
 	end
