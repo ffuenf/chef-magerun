@@ -343,6 +343,7 @@ action :db_drop do
 	description = "Drop current database in #{@new_resource.path}"
 	converge_by(description) do
 		command = "db:drop"
+		command << " --force" if @new_resource.force
 		
 		magerun(command, description)
 	end
