@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of magerun.
 
+## 2.1.0:
+
+* update/integrate testsuites: test-kitchen, foodcritic, rubocop, travis-ci
+
 ## 2.0.3:
 
 * fix db:drop --force command

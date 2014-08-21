@@ -1,0 +1,8 @@
+AllCops:
+  Exclude:
+    - 'berks-cookbooks/**/*'
+
+Encoding:
+  Enabled: false
+LineLength:
+  Enabled: false

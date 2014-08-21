@@ -1,28 +1,17 @@
-Description
-===========
-
-Installs [n98-magerun](https://github.com/netz98/n98-magerun) and provides access to a corresponding LWRP.
-
-Requirements
+chef-magerun
 ============
+[![GitHub tag](http://img.shields.io/github/tag/ffuenf/chef-magerun.svg)][tag]
+[![Build Status](http://img.shields.io/travis/ffuenf/chef-magerun.svg)][travis]
+[![Gittip](http://img.shields.io/gittip/arosenhagen.svg)][gittip]
 
-This Cookbook is only useful when dealing with [magento](http://www.magentocommerce.com/). Therefore you must have a complete magento installation running to use this cookbook and its associated LWRP.
+[tag]: https://github.com/ffuenf/chef-magerun/tags
+[travis]: https://travis-ci.org/ffuenf/chef-magerun
+[gittip]: https://www.gittip.com/arosenhagen
 
-Cookbooks
----------
-
-Attributes
-==========
-
-* `node['n98-magerun']['url']` - default: 'https://raw.github.com/netz98/n98-magerun/master/n98-magerun.phar'
-* `node['n98-magerun']['install_dir']` - default: '/usr/local/bin'
-* `node['n98-magerun']['install_file']` - default: 'n98-magerun'
-* `node['n98-magerun']['dir']` - default: '/var/lib/n98-magerun'
-* `node['n98-magerun']['git-url']` - default: 'https://github.com/netz98/n98-magerun'
-* `node['n98-magerun']['git-reference']` - default: 'HEAD'
+chef-magerun installs [n98-magerun](https://github.com/netz98/n98-magerun) and provides access to a corresponding LWRP.
 
 Usage
-=====
+-----
 
 Simply include the recipe in your application recipe, where you setup/deploy magento.
 ```ruby
@@ -57,14 +46,66 @@ $ magerun cache:clean
 Your commands will be run inside the Vagrant box using the n98-magerun config and Magento root defined.
 For performance reasons you might like to use the `$ magerun shell` feature rather than opening a new ssh connection for each command.
 
+Dependencies
+------------
+
+This cookbook depends on the following community cookbooks.
+
+* php
+
+Recommendations
+---------------
+
+* dop_php
+
+Platform
+--------
+
+The following platforms are supported and tested:
+
+* Debian 6.x
+* Debian 7.x
+* Ubuntu 14.04.x
+
+Other Debian family distributions are assumed to work.
+
+Development
+-----------
+1. Fork the repository from GitHub.
+2. Clone your fork to your local machine:
+
+        $ git clone git@github.com:USER/chef-magerun.git
+
+3. Create a git branch
+
+        $ git checkout -b my_bug_fix
+
+4. **Write tests**
+5. Make your changes/patches/fixes, committing appropriately
+6. Run the tests: `foodcritic`, `rubocop`, `kitchen test`
+7. Push your changes to GitHub
+8. Open a Pull Request
+
+Testing
+-------
+
+chef-magerun is on [Travis CI](http://travis-ci.org/ffuenf/chef-magerun) which tests against multiple Chef and Ruby versions.
+
+The following Rake tasks are provided for automated testing of the cookbook:
+
+* `rake rubocop` - Run [RuboCop] style and lint checks
+* `rake foodcritic` - Run [Foodcritic] lint checks
+* `rake integration` - Run [Test Kitchen] integration tests (provisions a
+  Vagrant VM using this cookbook and then tests the infrastructure with
+  [Serverspec])
+* `rake test` - Run all tests
+
 License and Author
-==================
-parts of this cookbook has been copied from [rjocoleman](https://github.com/rjocoleman/magerun-chef)
+------------------
 
-Author of n98-magerun:: [netz98 new media GmbH](http://www.netz98.de)
-Author:: Achim Rosenhagen (<a.rosenhagen@ffuenf.de>)
+- Author:: Achim Rosenhagen (<a.rosenhagen@ffuenf.de>)
 
-Copyright:: 2014, Achim Rosenhagen
+- Copyright:: 2014, ffuenf
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

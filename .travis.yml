@@ -1,0 +1,15 @@
+language: ruby
+rvm:
+- 1.9.3
+- 2.1.2
+before_script:
+- bundle exec berks vendor
+script:
+- bundle exec rubocop
+- bundle exec foodcritic -f any .
+branches:
+  only:
+  - master
+notifications:
+  slack:
+    secure: YhTw6Fhgf8Z4iFl6aEjpPy+Hm6XLbPKmlUVTx74XRWRXGUzdHff2sClu8dRG7WjYbWAEF+Vc9hMz0Telp1IjjvNTg9Aqqle5PhYbyUn2q623eSanWmpbSn5ev5saJnL3J8Fwh6HnbJjndQvgBwPTOYRazVxbecVchybKzEDMMMI=
