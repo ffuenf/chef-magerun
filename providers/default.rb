@@ -796,7 +796,7 @@ action :sys_website_list do
 end
 
 def magerun(command, description)
-  script "n98-magerun: #{command}" do
+  script "n98-magerun: #{description}" do
     interpreter 'bash'
     user 'root'
     cwd new_resource.path
