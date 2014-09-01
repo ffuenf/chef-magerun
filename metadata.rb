@@ -13,7 +13,3 @@ end
 %w(php).each do |ressource|
   depends ressource
 end
-
-%w(dop_php).each do |ressource|
-  recommends ressource
-end
