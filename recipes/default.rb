@@ -16,3 +16,9 @@ bash 'install_n98-magerun' do
   not_if { ::File.exist?("#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']}") }
   creates "#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']}"
 end
+template '~/.n98-magerun.yaml' do
+  source 'config.yaml.erb'
+  variables(
+    config: node['n98-magerun']['config']
+  )
+end

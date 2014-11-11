@@ -7,3 +7,5 @@ default['n98-magerun']['install_file'] = 'n98-magerun'
 default['n98-magerun']['dir'] = '/var/lib/n98-magerun'
 default['n98-magerun']['git-url'] = 'https://github.com/netz98/n98-magerun'
 default['n98-magerun']['git-reference'] = 'HEAD'
+
+default['n98-magerun']['config']['application']['check-root-user'] = 'false'

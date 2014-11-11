@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of magerun.
 
+## 2.1.1:
+
+* add overwrite config and set root user warning default to false
+
 ## 2.1.0:
 
 * update/integrate testsuites: test-kitchen, foodcritic, rubocop, travis-ci

@@ -1,0 +1,6 @@
+<% @config.keys.each do |category| %>
+<%= "#{category}:" %>
+<% @config[category].keys.each do |key| %>
+  <%= "#{key}: #{@config[category][key]}" %>
+<% end %>
+<% end %>
