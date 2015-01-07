@@ -27,14 +27,19 @@ action :install_magento do
   converge_by(description) do
     command = 'install'
     command << " --dbHost='#{new_resource.dbHost}'"
-    command << " --dbUser='#{new_resource.dbUser}'" unless @new_resource.dbUser.empty?
-    command << " --dbPass='#{new_resource.dbPass}'" unless @new_resource.dbPass.empty?
-    command << " --dbName='#{new_resource.dbName}'" unless @new_resource.dbName.empty?
+    command << " --dbUser='#{new_resource.dbUser}'"
+    command << " --dbPass='#{new_resource.dbPass}'"
+    command << " --dbName='#{new_resource.dbName}'"
+    command << " --dbPort='#{new_resource.dbPort}'"
     command << " --installSampleData='yes'" if @new_resource.installSampleData
     command << " --useDefaultConfigParams='yes'" if @new_resource.useDefaultConfigParams
+    command << " --magentoVersion='#{new_resource.magentoVersion}'"
     command << " --magentoVersionByName='#{new_resource.magentoVersionByName}'"
     command << " --installationFolder='#{new_resource.installationFolder}'" unless @new_resource.installationFolder.empty?
     command << " --baseUrl='#{new_resource.baseUrl}'" unless @new_resource.baseUrl.empty?
+    command << ' --noDownload' if @new_resource.noDownload
+    command << ' --replaceHtaccessFile' if @new_resource.replaceHtaccessFile
+    command << ' --forceUseDb' if @new_resource.forceUseDb
     magerun(command, description)
   end
 end

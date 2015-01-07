@@ -1,9 +1,7 @@
 language: ruby
+bundler_args: --without kitchen_vagrant --without development
 rvm:
-- 1.9.3
-- 2.1.2
-before_script:
-- bundle exec berks vendor
+- 2.2.0
 script:
 - bundle exec rubocop
 - bundle exec foodcritic -f any .

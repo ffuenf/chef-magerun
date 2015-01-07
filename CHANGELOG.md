@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of magerun.
 
+## 2.1.2:
+
+* update install command
+
 ## 2.1.1:
 
 * add overwrite config and set root user warning default to false

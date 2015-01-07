@@ -1,8 +1,22 @@
 AllCops:
   Exclude:
     - 'berks-cookbooks/**/*'
+    - 'Guardfile'
+
+UselessAssignment:
+  Enabled: false
+
+AlignParameters:
+  Enabled: false
 
 Encoding:
   Enabled: false
+
 LineLength:
+  Enabled: false
+
+MethodLength:
+  Enabled: false
+
+RescueModifier:
   Enabled: false

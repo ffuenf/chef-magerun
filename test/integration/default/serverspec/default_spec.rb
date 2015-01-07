@@ -1,13 +1,6 @@
 require 'serverspec'
-
-include Serverspec::Helper::Exec
-include Serverspec::Helper::DetectOS
-
-RSpec.configure do |c|
-  c.before :all do
-    c.path = '/sbin:/usr/sbin'
-  end
-end
+set :backend, :exec
+set :path, '/sbin:/usr/sbin:/usr/local/sbin:$PATH'
 
 describe file('/var/lib/n98-magerun') do
   it { should be_directory }

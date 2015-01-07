@@ -2,15 +2,20 @@ actions :install_magento, :script, :selfupdate, :shell, :uninstall, :admin_notif
 default_action :selfupdate
 
 attribute :path, kind_of: String, name_attribute: true
+attribute :magentoVersion, kind_of: String
+attribute :magentoVersionByName, kind_of: String, default: 'magento-ce-1.9.1.0'
+attribute :installationFolder, kind_of: String
 attribute :dbHost, kind_of: String, default: 'localhost'
 attribute :dbUser, kind_of: String
 attribute :dbPass, kind_of: String
 attribute :dbName, kind_of: String
+attribute :dbPort, kind_of: Fixnum, default: 3306
 attribute :installSampleData, kind_of: [TrueClass, FalseClass], default: false
 attribute :useDefaultConfigParams, kind_of: [TrueClass, FalseClass], default: true
-attribute :magentoVersionByName, kind_of: String, default: '1.7.0.2'
-attribute :installationFolder, kind_of: String
 attribute :baseUrl, kind_of: String
+attribute :replaceHtaccessFile, kind_of: [TrueClass, FalseClass], default: false
+attribute :noDownload, kind_of: [TrueClass, FalseClass], default: false
+attribute :forceUseDb, kind_of: [TrueClass, FalseClass], default: false
 attribute :filename, kind_of: String
 attribute :command, kind_of: String
 attribute :username, kind_of: String

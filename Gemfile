@@ -1,12 +1,23 @@
 source 'https://rubygems.org'
 
-gem 'chef'
-gem 'rake'
-gem 'berkshelf', '~> 3.0'
-gem 'foodcritic'
-gem 'rubocop'
+group :lint do
+  gem 'foodcritic'
+  gem 'rubocop'
+end
 
-group :integration do
+group :unit do
+  gem 'berkshelf', '~> 3.0'
+  gem 'chefspec'
+end
+
+group :kitchen_common do
+  gem 'chef'
+  gem 'knife-solo'
+  gem 'knife-solo_data_bag'
   gem 'test-kitchen'
+  gem 'serverspec', '~> 2.0'
+end
+
+group :kitchen_vagrant do
   gem 'kitchen-vagrant'
 end
