@@ -17,30 +17,57 @@
 # limitations under the License.
 #
 
-# Support whyrun
 def whyrun_supported?
   true
 end
 
+use_inline_resources
+
 action :install_magento do
   description = "Install magento in #{@new_resource.path}"
   converge_by(description) do
-    command = 'install'
-    command << " --dbHost='#{new_resource.dbHost}'"
-    command << " --dbUser='#{new_resource.dbUser}'"
-    command << " --dbPass='#{new_resource.dbPass}'"
-    command << " --dbName='#{new_resource.dbName}'"
-    command << " --dbPort='#{new_resource.dbPort}'"
-    command << " --installSampleData='yes'" if @new_resource.installSampleData
-    command << " --useDefaultConfigParams='yes'" if @new_resource.useDefaultConfigParams
-    command << " --magentoVersion='#{new_resource.magentoVersion}'"
-    command << " --magentoVersionByName='#{new_resource.magentoVersionByName}'"
-    command << " --installationFolder='#{new_resource.installationFolder}'" unless @new_resource.installationFolder.empty?
-    command << " --baseUrl='#{new_resource.baseUrl}'" unless @new_resource.baseUrl.empty?
-    command << ' --noDownload' if @new_resource.noDownload
-    command << ' --replaceHtaccessFile' if @new_resource.replaceHtaccessFile
-    command << ' --forceUseDb' if @new_resource.forceUseDb
-    magerun(command, description)
+    if php_ext?
+      command = 'install'
+      command << " --dbHost='#{new_resource.dbHost}'"
+      command << " --dbUser='#{new_resource.dbUser}'"
+      command << " --dbPass='#{new_resource.dbPass}'"
+      command << " --dbName='#{new_resource.dbName}'"
+      command << " --dbPort='#{new_resource.dbPort}'"
+      command << " --installSampleData='yes'" if @new_resource.installSampleData
+      command << " --useDefaultConfigParams='yes'" if @new_resource.useDefaultConfigParams
+      command << " --magentoVersion='#{new_resource.magentoVersion}'"
+      command << " --magentoVersionByName='#{new_resource.magentoVersionByName}'"
+      command << " --installationFolder='#{new_resource.installationFolder}'" unless @new_resource.installationFolder.empty?
+      command << " --baseUrl='#{new_resource.baseUrl}'" unless @new_resource.baseUrl.empty?
+      command << ' --noDownload' if @new_resource.noDownload
+      command << ' --replaceHtaccessFile' if @new_resource.replaceHtaccessFile
+      command << ' --forceUseDb=true' if @new_resource.forceUseDb
+      magerun(command, description)
+    end
+  end
+end
+
+action :set_permissions do
+  description = "n98-magerun: Set rights and permissions of #{new_resource.installationFolder}"
+  converge_by(description) do
+    execute "set rights of #{new_resource.installationFolder}" do
+      cwd new_resource.installationFolder
+      command "chown #{node['n98-magerun']['magento_install']['user']}:#{node['n98-magerun']['magento_install']['group']} #{new_resource.installationFolder} -R"
+      action :run
+    end
+    execute "set file permissions of #{new_resource.installationFolder}" do
+      cwd new_resource.installationFolder
+      command 'find . -type f -exec chmod 644 {} ;'
+      action :run
+    end
+    execute "set folder permissions of #{new_resource.installationFolder}" do
+      cwd new_resource.installationFolder
+      command 'find . -type d -exec chmod 755 {} ;'
+      action :run
+    end
+  end
+end
+
   end
 end
 
@@ -801,12 +828,27 @@ action :sys_website_list do
 end
 
 def magerun(command, description)
-  script "n98-magerun: #{description}" do
-    interpreter 'bash'
-    user 'root'
+  execute "n98-magerun: #{description}" do
     cwd new_resource.path
-    code <<-EOF
-      #{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']} -n -q --root-dir=#{new_resource.path} #{command}
-    EOF
+    user node['n98-magerun']['user']
+    group node['n98-magerun']['group']
+    command "#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']} -n -q --root-dir=#{new_resource.path} #{command}"
+    action :run
+  end
+  new_resource.updated_by_last_action(true)
+end
+
+def php_ext?
+  php_exts = %w(curl dom gd hash iconv mcrypt pcre pdo pdo_mysql simplexml)
+  php_exts.each do |php_ext|
+    cmdstr = "php -m | grep -qi #{php_ext}"
+    cmd = Mixlib::ShellOut.new(cmdstr)
+    cmd.run_command
+    begin
+      cmd.error!
+      true
+    rescue
+      raise "n98-magerun: required PHP Extension #{php_ext} is missing!"
+    end
   end
 end

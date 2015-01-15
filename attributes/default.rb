@@ -9,4 +9,7 @@ default['n98-magerun']['git-url'] = 'https://github.com/netz98/n98-magerun'
 default['n98-magerun']['git-reference'] = 'HEAD'
 default['n98-magerun']['user'] = 'www-data'
 
+default['n98-magerun']['magento_install']['user'] = 'www-data'
+default['n98-magerun']['magento_install']['group'] = 'www-data'
+
 default['n98-magerun']['config']['application']['check-root-user'] = 'false'
