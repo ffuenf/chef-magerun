@@ -1,6 +1,4 @@
-require 'serverspec'
-set :backend, :exec
-set :path, '/sbin:/usr/sbin:/usr/local/sbin:$PATH'
+require_relative '../../../kitchen/data/spec_helper'
 
 describe file('/var/lib/n98-magerun') do
   it { should be_directory }

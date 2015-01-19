@@ -4,6 +4,7 @@ driver_config:
 
 provisioner:
   name: chef_zero
+  data_path: test/shared
   solo_rb:
     ssl_verify_mode: verify_peer
   require_chef_omnibus: latest

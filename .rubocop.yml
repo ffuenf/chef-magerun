@@ -3,9 +3,6 @@ AllCops:
     - 'berks-cookbooks/**/*'
     - 'Guardfile'
 
-UselessAssignment:
-  Enabled: false
-
 AlignParameters:
   Enabled: false
 
@@ -19,4 +16,7 @@ MethodLength:
   Enabled: false
 
 RescueModifier:
+  Enabled: false
+
+AbcSize:
   Enabled: false

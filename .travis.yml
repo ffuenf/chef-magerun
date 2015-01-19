@@ -1,13 +1,11 @@
 language: ruby
+sudo: false
 bundler_args: --without kitchen_vagrant --without development
 rvm:
 - 2.2.0
 script:
 - bundle exec rubocop
 - bundle exec foodcritic -f any .
-branches:
-  only:
-  - master
 notifications:
   slack:
     secure: YhTw6Fhgf8Z4iFl6aEjpPy+Hm6XLbPKmlUVTx74XRWRXGUzdHff2sClu8dRG7WjYbWAEF+Vc9hMz0Telp1IjjvNTg9Aqqle5PhYbyUn2q623eSanWmpbSn5ev5saJnL3J8Fwh6HnbJjndQvgBwPTOYRazVxbecVchybKzEDMMMI=
