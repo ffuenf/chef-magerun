@@ -68,6 +68,16 @@ action :set_permissions do
   end
 end
 
+action :install_n98_module do
+  description = "Install n98-magerun module #{new_resource.n98_module_name} in #{@new_resource.path}"
+  converge_by(description) do
+    directory node['n98-magerun']['modules']['home'] do
+      recursive true
+    end
+    git "#{node['n98-magerun']['modules']['home']}/#{new_resource.n98_module_name}" do
+      repository new_resource.n98_module_repo
+      action :sync
+    end
   end
 end
 
