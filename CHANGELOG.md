@@ -2,6 +2,11 @@
 
 This file is used to list changes made in each version of magerun.
 
+## 2.2.0:
+
+* update/integrate testsuites: test-kitchen, foodcritic, rubocop, travis-ci
+* prepare for release on supermarket.chef.io
+
 ## 2.1.3:
 
 * update install command: check for required php extensions (fixes #1 / thx tatemz)
