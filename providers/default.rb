@@ -57,12 +57,12 @@ action :set_permissions do
     end
     execute "set file permissions of #{new_resource.installationFolder}" do
       cwd new_resource.installationFolder
-      command 'find . -type f -exec chmod 644 {} ;'
+      command 'find . -type f -exec chmod 644 {} \;'
       action :run
     end
     execute "set folder permissions of #{new_resource.installationFolder}" do
       cwd new_resource.installationFolder
-      command 'find . -type d -exec chmod 755 {} ;'
+      command 'find . -type d -exec chmod 755 {} \;'
       action :run
     end
   end
