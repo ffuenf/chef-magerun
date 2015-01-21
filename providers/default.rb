@@ -33,7 +33,7 @@ action :install_magento do
       command << " --dbPass='#{new_resource.dbPass}'"
       command << " --dbName='#{new_resource.dbName}'"
       command << " --dbPort='#{new_resource.dbPort}'"
-      command << " --installSampleData='yes'" if @new_resource.installSampleData
+      command << " --installSampleData='no'" unless @new_resource.installSampleData
       command << " --useDefaultConfigParams='yes'" if @new_resource.useDefaultConfigParams
       command << " --magentoVersion='#{new_resource.magentoVersion}'"
       command << " --magentoVersionByName='#{new_resource.magentoVersionByName}'"
