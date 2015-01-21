@@ -838,7 +838,7 @@ action :sys_website_list do
 end
 
 def magerun(command, description)
-  command << ' -q' if @new_resource.quiteMode
+  command << ' -q' if @new_resource.quietMode
   command << ' -v' if @new_resource.verboseMode
   command << ' -vvv' if @new_resource.debugMode
 
