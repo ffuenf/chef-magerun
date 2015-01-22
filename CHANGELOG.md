@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of magerun.
 
+## 2.2.1:
+
+* Sample data during installation is marked by default. Created an option to turn off sample data. (tatemz)
+* Fixed find -exec bug. (tatemz)
+* Added output and debugging options. (tatemz)
+
 ## 2.2.0:
 
 * update/integrate testsuites: test-kitchen, foodcritic, rubocop, travis-ci
