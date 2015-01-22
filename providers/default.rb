@@ -33,7 +33,7 @@ action :install_magento do
       command << " --dbPass='#{new_resource.dbPass}'"
       command << " --dbName='#{new_resource.dbName}'"
       command << " --dbPort='#{new_resource.dbPort}'"
-      command << " --installSampleData='yes'" if @new_resource.installSampleData
+      command << " --installSampleData='no'" unless @new_resource.installSampleData
       command << " --useDefaultConfigParams='yes'" if @new_resource.useDefaultConfigParams
       command << " --magentoVersion='#{new_resource.magentoVersion}'"
       command << " --magentoVersionByName='#{new_resource.magentoVersionByName}'"
@@ -57,12 +57,12 @@ action :set_permissions do
     end
     execute "set file permissions of #{new_resource.installationFolder}" do
       cwd new_resource.installationFolder
-      command 'find . -type f -exec chmod 644 {} ;'
+      command 'find . -type f -exec chmod 644 {} \;'
       action :run
     end
     execute "set folder permissions of #{new_resource.installationFolder}" do
       cwd new_resource.installationFolder
-      command 'find . -type d -exec chmod 755 {} ;'
+      command 'find . -type d -exec chmod 755 {} \;'
       action :run
     end
   end
@@ -838,11 +838,15 @@ action :sys_website_list do
 end
 
 def magerun(command, description)
+  command << ' -q' if @new_resource.quietMode
+  command << ' -v' if @new_resource.verboseMode
+  command << ' -vvv' if @new_resource.debugMode
+
   execute "n98-magerun: #{description}" do
     cwd new_resource.path
     user node['n98-magerun']['user']
     group node['n98-magerun']['group']
-    command "#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']} -n -q --root-dir=#{new_resource.path} #{command}"
+    command "#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']} -n --root-dir=#{new_resource.path} #{command}"
     action :run
   end
   new_resource.updated_by_last_action(true)
