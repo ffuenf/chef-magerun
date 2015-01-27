@@ -847,6 +847,7 @@ def magerun(command, description)
     user node['n98-magerun']['user']
     group node['n98-magerun']['group']
     command "#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']} -n --root-dir=#{new_resource.path} #{command}"
+    timeout 900
     action :run
   end
   new_resource.updated_by_last_action(true)
