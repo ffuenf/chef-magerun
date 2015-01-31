@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of magerun.
 
+## 2.2.2:
+
+* Allow for 15 minute timout on magerun executions (tatemz)
+
 ## 2.2.1:
 
 * Sample data during installation is marked by default. Created an option to turn off sample data. (tatemz)
