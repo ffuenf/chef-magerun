@@ -89,7 +89,7 @@ attribute :define, kind_of: String
 attribute :stop_on_error, kind_of: [TrueClass, FalseClass], default: false
 attribute :script, kind_of: String
 attribute :n98_module_name, kind_of: String
-attribute :n98_module_path, kind_of: String
+attribute :n98_module_repo, kind_of: String
 attribute :quietMode, kind_of: [TrueClass, FalseClass], default: false
 attribute :verboseMode, kind_of: [TrueClass, FalseClass], default: false
 attribute :debugMode, kind_of: [TrueClass, FalseClass], default: false

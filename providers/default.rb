@@ -71,7 +71,7 @@ end
 action :install_n98_module do
   description = "Install n98-magerun module #{new_resource.n98_module_name} in #{node['n98-magerun']['modules']['home']}/#{new_resource.n98_module_name}"
   converge_by(description) do
-    directory "#{node['n98-magerun']['modules']['home']}" do
+    directory node['n98-magerun']['modules']['home'] do
       recursive true
     end
     git "#{node['n98-magerun']['modules']['home']}#{new_resource.n98_module_name}" do
