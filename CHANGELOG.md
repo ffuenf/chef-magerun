@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of magerun.
 
+## 2.2.3:
+
+* fix installation of n98-magerun modules
+
 ## 2.2.2:
 
 * Allow for 15 minute timout on magerun executions (tatemz)
