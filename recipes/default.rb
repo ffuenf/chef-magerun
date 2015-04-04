@@ -17,7 +17,7 @@ execute 'install_n98-magerun' do
   creates "#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']}"
   action :run
 end
-template "/home/#{node['n98-magerun']['user']}/.n98-magerun.yaml" do
+template '/etc/n98-magerun.yaml' do
   source 'config.yaml.erb'
   variables(
     config: node['n98-magerun']['config']
