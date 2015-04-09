@@ -37,7 +37,7 @@ action :install_magento do
       command << " --useDefaultConfigParams='yes'" if @new_resource.useDefaultConfigParams
       command << " --magentoVersion='#{new_resource.magentoVersion}'"
       command << " --magentoVersionByName='#{new_resource.magentoVersionByName}'"
-      command << " --installationFolder='#{new_resource.installationFolder}'" unless @new_resource.installationFolder.empty?
+      command << " --installationFolder='#{new_resource.path}'"
       command << " --baseUrl='#{new_resource.baseUrl}'" unless @new_resource.baseUrl.empty?
       command << ' --noDownload' if @new_resource.noDownload
       command << ' --replaceHtaccessFile' if @new_resource.replaceHtaccessFile
@@ -842,6 +842,7 @@ def magerun(command, description)
   command << ' -v' if @new_resource.verboseMode
   command << ' -vvv' if @new_resource.debugMode
 
+  Chef::Log.info "n98-magerun -n --root-dir=#{new_resource.path} #{command}"
   execute "n98-magerun: #{description}" do
     cwd new_resource.path
     user node['n98-magerun']['user']

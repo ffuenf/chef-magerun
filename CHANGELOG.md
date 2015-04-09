@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of magerun.
 
+## 2.2.4:
+
+* fix install command (path)
+* use system-wide config
+* add locations of compressed sample data
+
 ## 2.2.3:
 
 * fix installation of n98-magerun modules
