@@ -2,6 +2,11 @@
 
 This file is used to list changes made in each version of magerun.
 
+## 2.2.5:
+
+* housekeeping: update versions for test-kitchen
+* upgrade to new file location
+
 ## 2.2.4:
 
 * fix install command (path)

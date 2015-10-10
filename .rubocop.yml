@@ -1,7 +1,6 @@
 AllCops:
   Exclude:
     - 'berks-cookbooks/**/*'
-    - 'Guardfile'
 
 AlignParameters:
   Enabled: false
