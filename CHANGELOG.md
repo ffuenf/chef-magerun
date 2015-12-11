@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of magerun.
 
+## 2.2.6:
+
+* use direct installation from url and remove git reference
+
 ## 2.2.5:
 
 * housekeeping: update versions for test-kitchen
