@@ -10,7 +10,6 @@ remote_file "#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['instal
   owner 'root'
   group 'root'
   mode 0755
-  creates "#{node['n98-magerun']['install_dir']}/#{node['n98-magerun']['install_file']}"
 end
 template '/etc/n98-magerun.yaml' do
   source 'config.yaml.erb'
